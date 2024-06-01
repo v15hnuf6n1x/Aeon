@@ -299,7 +299,7 @@ IMAGES = (IMAGES.replace("'", '').replace('"', '').replace(
     '[', '').replace(']', '').replace(",", "")).split()
 
 
-SET_COMMANDS = environ.get('SET_COMMANDS', '')
+SET_COMMANDS = environ.get('SET_COMMANDS', 'True')
 SET_COMMANDS = SET_COMMANDS.lower() == 'true'
 
 TOKEN_TIMEOUT = environ.get('TOKEN_TIMEOUT', '')

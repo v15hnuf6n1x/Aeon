@@ -261,7 +261,7 @@ async def load_config():
     IMAGES = (IMAGES.replace("'", '').replace('"', '').replace(
         '[', '').replace(']', '').replace(",", "")).split()
 
-    SET_COMMANDS = environ.get('SET_COMMANDS', '')
+    SET_COMMANDS = environ.get('SET_COMMANDS', 'True')
     SET_COMMANDS = SET_COMMANDS.lower() == 'true'
 
     TOKEN_TIMEOUT = environ.get('TOKEN_TIMEOUT', '')
@@ -411,9 +411,9 @@ async def get_buttons(key=None, edit_type=None, edit_mode=None, mess=None):
             msg += 'Send a valid value for the above Var. <b>Timeout:</b> 60 sec'
         if key in bool_vars:
             if not (value := config_dict.get(key)):
-            	  buttons.ibutton('Make it True', f"botset boolvar {key} on")
+                buttons.ibutton('Make it True', f"botset boolvar {key} on")
             else:
-            	  buttons.ibutton('Make it False', f"botset boolvar {key} off")
+                buttons.ibutton('Make it False', f"botset boolvar {key} off")
     button = buttons.build_menu(1) if key is None else buttons.build_menu(2)
     return msg, button
 
