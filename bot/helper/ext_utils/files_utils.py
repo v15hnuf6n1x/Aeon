@@ -113,7 +113,7 @@ async def get_media_info(path, metadata=False):
                         if lc not in lang:
                             lang += f"{lc}, "
                     except Exception:
-                    	  pass
+                        pass
                 if stream.get('codec_type') == 'subtitle' and (st := stream.get('tags', {}).get('language')):
                     try:
                         st = Language.get(st).display_name()
