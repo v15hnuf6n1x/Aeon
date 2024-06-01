@@ -344,8 +344,8 @@ class MirrorLeechListener:
         name, _ = await process_file(name, user_id, isMirror=not self.isLeech)
         user_dict = user_data.get(user_id, {})
         msg = f'{escape(name)}\n\n'
-        msg += f'<b>⌑ sɪᴢᴇ: </b>{get_readable_file_size(size)}\n'
-        msg += f'<b><blockquote>⌑ ᴇʟᴀᴘsᴇᴅ: </b>{get_readable_time(time() - self.message.date.timestamp())}\n<blockquote>'
+        msg += f'<b><blockquote>⌑ sɪᴢᴇ: </b>{get_readable_file_size(size)}\n'
+        msg += f'<b>⌑ ᴇʟᴀᴘsᴇᴅ: </b>{get_readable_time(time() - self.message.date.timestamp())}\n<blockquote>'
         LOGGER.info(f'ᴛᴀsᴋ ᴅᴏɴᴇ: {name}')
         buttons = ButtonMaker()
         iButton = ButtonMaker()
@@ -384,7 +384,7 @@ class MirrorLeechListener:
                 await sendMessage(self.botpmmsg, msg + lmsg + fmsg)
                 await deleteMessage(self.botpmmsg)
                 if self.isSuperGroup:
-                    await sendMessage(self.message, f'{msg}<b>Files has been sent to your inbox</b>', iButton.build_menu(1))
+                    await sendMessage(self.message, f'{msg}<b>ғɪʟᴇs ʜᴀs ʙᴇᴇɴ sᴇɴᴛ ᴛᴏ ʏᴏᴜʀ ɪɴʙᴏx</b>', iButton.build_menu(1))
                 else:
                     await deleteMessage(self.botpmmsg)
             if self.seed:
@@ -425,7 +425,7 @@ class MirrorLeechListener:
             await sendMessage(self.botpmmsg, msg, button, 'Random')
             await deleteMessage(self.botpmmsg)
             if self.isSuperGroup:
-                await sendMessage(self.message, f'{msg} <b>Links has been sent to your inbox</b>', iButton.build_menu(1))
+                await sendMessage(self.message, f'{msg} <b>ʟɪɴᴋs ʜᴀs ʙᴇᴇɴ sᴇɴᴛ ᴛᴏ ʏᴏᴜʀ ɪɴʙᴏx</b>', iButton.build_menu(1))
             else:
                 await deleteMessage(self.botpmmsg)
             if self.seed:
