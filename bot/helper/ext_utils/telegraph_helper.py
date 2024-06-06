@@ -4,7 +4,6 @@ from telegraph.aio import Telegraph
 from telegraph.exceptions import RetryAfterError
 from logging import getLogger, ERROR
 from bot import LOGGER, bot_loop
-getLogger("telegraph").setLevel(ERROR)
 
 class TelegraphHelper:
     def __init__(self):

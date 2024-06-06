@@ -8,7 +8,29 @@ from web.nodes import make_tree
 
 app = Flask(__name__)
 
-aria2 = ariaAPI(ariaClient(host="http://localhost", port=6800, secret=""))
+aria2 = ariaAPI(
+    ariaClient(
+        host="http://localhost",
+        port=6800,
+        secret=""
+    )
+)
+
+xnox_client = qbClient(
+    host="localhost",
+    port=8090,
+    VERIFY_WEBUI_CERTIFICATE=False,
+    REQUESTS_ARGS={
+        "timeout": (
+            30,
+            60
+        )
+    },
+    HTTPADAPTER_ARGS={
+        "pool_maxsize": 200,
+        "pool_block": True
+    },
+)
 
 basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[FileHandler('log.txt'), StreamHandler()],
@@ -227,13 +249,13 @@ function s_validate() {
           src="https://graph.org/file/1a6ad157f55bc42b548df.png"
           alt="logo"
         />
-        <a href="https://telegram.me/hrishikesh2861">
+        <a href="https://t.me/hrishikesh2861">
           <h2 class="name">Bittorrent Selection</h2>
         </a>
       </div>
       <div class="social">
-        <a href="https://www.github.com/Hrishi2861"><i class="fab fa-github"></i></a>
-        <a href="https://telegram.me/hrishikesh2861"><i class="fab fa-telegram"></i></a>
+        <a href="https://github.com/Hrishi2861/Aeon"><i class="fab fa-github"></i></a>
+        <a href="https://t.me/hrishikesh2861"><i class="fab fa-telegram"></i></a>
       </div>
     </header>
     <div id="sticks">
@@ -619,13 +641,13 @@ section span{
           src="https://graph.org/file/1a6ad157f55bc42b548df.png"
           alt="logo"
         />
-        <a href="https://telegram.me/hrishikesh2861">
+        <a href="https://t.me/hrishikesh2861">
           <h2 class="name">Bittorrent Selection</h2>
         </a>
       </div>
       <div class="social">
-        <a href="https://www.github.com/Hrishi2861"><i class="fab fa-github"></i></a>
-        <a href="https://telegram.me/hrishikesh2861"><i class="fab fa-telegram"></i></a>
+        <a href="https://github.com/Hrishi2861/Aeon"><i class="fab fa-github"></i></a>
+        <a href="https://t.me/hrishikesh2861"><i class="fab fa-telegram"></i></a>
       </div>
     </header>
     <section>
@@ -649,7 +671,7 @@ section span{
 """
 
 
-def re_verfiy(paused, resumed, client, hash_id):
+def re_verfiy(paused, resumed, hash_id):
 
     paused = paused.strip()
     resumed = resumed.strip()
@@ -660,7 +682,7 @@ def re_verfiy(paused, resumed, client, hash_id):
 
     k = 0
     while True:
-        res = client.torrents_files(torrent_hash=hash_id)
+        res = xnox_client.torrents_files(torrent_hash=hash_id)
         verify = True
         for i in res:
             if str(i.id) in paused and i.priority != 0:
@@ -672,18 +694,16 @@ def re_verfiy(paused, resumed, client, hash_id):
         if verify:
             break
         LOGGER.info("Reverification Failed! Correcting stuff...")
-        client.auth_log_out()
         sleep(1)
-        client = qbClient(host="localhost", port="8090")
         try:
-            client.torrents_file_priority(
+            xnox_client.torrents_file_priority(
                 torrent_hash=hash_id, file_ids=paused, priority=0)
         except NotFound404Error as e:
             raise NotFound404Error from e
         except Exception as e:
             LOGGER.error(f"{e} Errored in reverification paused!")
         try:
-            client.torrents_file_priority(
+            xnox_client.torrents_file_priority(
                 torrent_hash=hash_id, file_ids=resumed, priority=1)
         except NotFound404Error as e:
             raise NotFound404Error from e
@@ -712,10 +732,8 @@ def list_torrent_contents(id_):
         return "<h1>Incorrect pin code</h1>"
 
     if len(id_) > 20:
-        client = qbClient(host="localhost", port="8090")
-        res = client.torrents_files(torrent_hash=id_)
+        res = xnox_client.torrents_files(torrent_hash=id_)
         cont = make_tree(res)
-        client.auth_log_out()
     else:
         res = aria2.client.get_files(id_)
         cont = make_tree(res, True)
@@ -742,26 +760,23 @@ def set_priority(id_):
         pause = pause.strip("|")
         resume = resume.strip("|")
 
-        client = qbClient(host="localhost", port="8090")
-
         try:
-            client.torrents_file_priority(
+            xnox_client.torrents_file_priority(
                 torrent_hash=id_, file_ids=pause, priority=0)
         except NotFound404Error as e:
             raise NotFound404Error from e
         except Exception as e:
             LOGGER.error(f"{e} Errored in paused")
         try:
-            client.torrents_file_priority(
+            xnox_client.torrents_file_priority(
                 torrent_hash=id_, file_ids=resume, priority=1)
         except NotFound404Error as e:
             raise NotFound404Error from e
         except Exception as e:
             LOGGER.error(f"{e} Errored in resumed")
         sleep(1)
-        if not re_verfiy(pause, resume, client, id_):
+        if not re_verfiy(pause, resume, id_):
             LOGGER.error(f"Verification Failed! Hash: {id_}")
-        client.auth_log_out()
     else:
         for i, value in data.items():
             if "filenode" in i and value == "on":
@@ -780,7 +795,7 @@ def set_priority(id_):
 
 @app.route('/')
 def homepage():
-    return "<h1>See Jet-Mirror <a href='https://www.github.com/Hrishi2861'>@GitHub</a> By <a href='https://github.com/Hrishi2861'>Modified By Jet-Mirror</a></h1>"
+    return "<h1>See Aeon <a href='https://github.com/Hrishi2861/Aeon'>@GitHub</a> By <a href='https://github.com/Hrishi2861'>Jet-Mirror ❤️🚀</a></h1>"
 
 
 @app.errorhandler(Exception)

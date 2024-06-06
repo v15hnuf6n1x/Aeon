@@ -338,15 +338,15 @@ class MirrorLeechListener:
             await RCTransfer.upload(up_path, size)
 
     async def onUploadComplete(self, link, size, files, folders, mime_type, name, rclonePath=''):
-        user_id = self.message.from_user.id
         await self.message.reply_sticker("CAACAgIAAxkBAAEZdwRmJhCNfFRnXwR_lVKU1L9F3qzbtAAC4gUAAj-VzApzZV-v3phk4DQE")
         await asyncio.sleep(2)
+        user_id = self.message.from_user.id
         name, _ = await process_file(name, user_id, isMirror=not self.isLeech)
         user_dict = user_data.get(user_id, {})
         msg = f'{escape(name)}\n\n'
         msg += f'<b>⌑ sɪᴢᴇ: </b>{get_readable_file_size(size)}\n'
         msg += f'<b>⌑ ᴇʟᴀᴘsᴇᴅ: </b>{get_readable_time(time() - self.message.date.timestamp())}\n'
-        LOGGER.info(f'ᴛᴀsᴋ ᴅᴏɴᴇ: {name}')
+        LOGGER.info(f'Task Done: {name}')
         buttons = ButtonMaker()
         iButton = ButtonMaker()
         iButton.ibutton('Vɪᴇᴡ ɪɴ ɪɴʙᴏx', f"aeon {user_id} private", 'header')
@@ -356,8 +356,8 @@ class MirrorLeechListener:
                 msg += f'<b>⌑ ᴛᴏᴛᴀʟ ғɪʟᴇs: </b>{folders}\n'
             if mime_type != 0:
                 msg += f'<b>⌑ ᴄᴏʀʀᴜᴘᴛᴇᴅ ғɪʟᴇs: </b>{mime_type}\n'
-            msg += f'<b>⌑ ᴜᴘʟᴏᴀᴅᴇᴅ ʙʏ: </b>{self.tag}\n'
-            msg += f'<b>⌑ ᴜsᴇʀ ɪᴅ: </b><code>{self.message.from_user.id}</code>\n\n'
+            msg += f'<b>⌑ ᴜsᴇʀ ɪᴅ: </b><code>{self.message.from_user.id}</code>\n'
+            msg += f'<b>⌑ ᴜᴘʟᴏᴀᴅᴇᴅ ʙʏ: </b>{self.tag}\n\n'
             if not files:
                 if self.isPrivate:
                     msg += '<b>ғɪʟᴇs ʜᴀᴠᴇ ɴᴏᴛ ʙᴇᴇɴ sᴇɴᴛ ғᴏʀ ᴀɴ ᴜɴsᴘᴇᴄɪғɪᴇᴅ ʀᴇᴀsᴏɴ.</b>'
@@ -365,7 +365,7 @@ class MirrorLeechListener:
             else:
                 attachmsg = True
                 fmsg, totalmsg = '\n\n', ''
-                lmsg = '<b>ғɪʟᴇs ʜᴀᴠᴇ ʙᴇᴇɴ sᴇɴᴛ. ᴀᴄᴇss ᴛʜᴇᴍ ᴠɪᴀ ᴛʜᴇ ᴘʀᴏᴠɪᴅᴇᴅ ʟɪɴᴋs.</b>'
+                lmsg = '<b><b>ғɪʟᴇs ʜᴀᴠᴇ ʙᴇᴇɴ sᴇɴᴛ. ᴀᴄᴇss ᴛʜᴇᴍ ᴠɪᴀ ᴛʜᴇ ᴘʀᴏᴠɪᴅᴇᴅ ʟɪɴᴋs.</b>'
                 for index, (link, name) in enumerate(files.items(), start=1):
                     fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
                     totalmsg = (msg + lmsg + fmsg) if attachmsg else fmsg
@@ -384,7 +384,7 @@ class MirrorLeechListener:
                 await sendMessage(self.botpmmsg, msg + lmsg + fmsg)
                 await deleteMessage(self.botpmmsg)
                 if self.isSuperGroup:
-                    await sendMessage(self.message, f'{msg}<b>ғɪʟᴇs ʜᴀs ʙᴇᴇɴ sᴇɴᴛ ᴛᴏ ʏᴏᴜʀ ɪɴʙᴏx</b>', iButton.build_menu(1))
+                    await sendMessage(self.message, f'{msg}<b>ғɪʟᴇs ʜᴀs ʙᴇᴇɴ sᴇɴᴛ ᴛᴏ ʏᴏᴜʀ ɪɴʙᴏx.</b>', iButton.build_menu(1))
                 else:
                     await deleteMessage(self.botpmmsg)
             if self.seed:
@@ -415,8 +415,8 @@ class MirrorLeechListener:
                 button = None
                 buttons = extra_btns(buttons)
                 button = buttons.build_menu(2)
-            msg += f'<b>⌑ ᴜᴘʟᴏᴀᴅᴇᴅ ʙʏ: </b>{self.tag}\n'
-            msg += f'<b>⌑ ᴜsᴇʀ ɪᴅ: </b><code>{self.message.from_user.id}</code>\n\n'
+            msg += f'<b>⌑ ᴜsᴇʀ ɪᴅ: </b><code>{self.message.from_user.id}</code>\n'
+            msg += f'<b>⌑ ᴜᴘʟᴏᴀᴅᴇᴅ ʙʏ: </b>{self.tag}\n\n'
 
             if config_dict['MIRROR_LOG_ID']:
                 log_msg = list((await sendMultiMessage(config_dict['MIRROR_LOG_ID'], msg, button)).values())[0]
@@ -465,11 +465,11 @@ class MirrorLeechListener:
                 self.sameDir['tasks'].remove(self.uid)
                 self.sameDir['total'] -= 1
         await self.message.reply_sticker("CAACAgUAAxkBAAEZdxRmJhSGaHTpbHXmny9aPbKz9gfqvQACOA0AAmtQOVRDTwRcAyjd3DQE")
-        await asyncio.sleep(2)
+        await asyncio.sleep(2)        
         msg = f'ʜᴇʏ, {self.tag}!\n'
         msg += 'ʏᴏᴜʀ ᴅᴏᴡɴʟᴏᴀᴅ ʜᴀs ʙᴇᴇɴ sᴛᴏᴘᴘᴇᴅ!\n\n'
-        msg += f'<b>ʀᴇᴀsᴏɴ:</b> {escape(error)}\n'
-        msg += f'<b>ᴇʟᴀᴘsᴇᴅ:</b> {get_readable_time(time() - self.message.date.timestamp())}'
+        msg += f'<b>ʀᴇᴀsᴏɴ: </b> {escape(error)}\n'
+        msg += f'<b>ᴇʟᴀᴘsᴇᴅ: </b> {get_readable_time(time() - self.message.date.timestamp())}'
         x = await sendMessage(self.message, msg, button)
         await delete_links(self.message)
         if self.botpmmsg:
@@ -511,8 +511,8 @@ class MirrorLeechListener:
         await asyncio.sleep(2)
         msg = f'ʜᴇʏ, {self.tag}!\n'
         msg += 'ʏᴏᴜʀ ᴜᴘʟᴏᴀᴅ ʜᴀs ʙᴇᴇɴ sᴛᴏᴘᴘᴇᴅ!\n\n'
-        msg += f'<b>ʀᴇᴀsᴏɴ:</b> {escape(error)}\n'
-        msg += f'<b>ᴇʟᴀᴘsᴇᴅ:</b> {get_readable_time(time() - self.message.date.timestamp())}'
+        msg += f'<b>ʀᴇᴀsᴏɴ: </b> {escape(error)}\n'
+        msg += f'<b>ᴇʟᴀᴘsᴇᴅ: </b> {get_readable_time(time() - self.message.date.timestamp())}'
         x = await sendMessage(self.message, msg)
         if self.linkslogmsg:
             await deleteMessage(self.linkslogmsg)
