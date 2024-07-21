@@ -17,6 +17,6 @@ jobs:
       with:
         type: git
         app: me0n
-        environment: project01
+        environment: holip
         username: ${{ secrets.APTIBLE_USERNAME }}
         password: ${{ secrets.APTIBLE_PASSWORD }}
